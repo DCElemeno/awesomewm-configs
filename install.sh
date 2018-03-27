@@ -19,7 +19,7 @@ function copyAwesomeConfig {
 }
 
 # install a bunch of crap, only if ubuntu
-if [ $DISTRO != 'Ubuntu' ]; then echo "not ubuntu";
+if [ $DISTRO != 'Ubuntu' ]; then tpu setaf 1; echo "! NOT UBUNTU : couldnt do shit"; tput sgr0;
 else 
 	# add ppa for the latest version of awesomewm
 	sudo add-apt-repository  ppa:klaus-vormweg/awesome -y;
