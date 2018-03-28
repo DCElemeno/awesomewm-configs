@@ -8,7 +8,7 @@ reset=`tput sgr0`
 # check distro and see if we are on ubuntu
 DISTRO="$(cat /etc/lsb-release | grep DISTRIB_ID | cut -d'=' -f2)"
 
-#function that creates ~/.config/awesome if not there or cd if there
+# function that creates ~/.config/awesome if not there or cd if there
 function copyAwesomeConfig {
 
 	# check ~/.config
@@ -23,16 +23,9 @@ function copyAwesomeConfig {
 	{ sudo cp -avr ./awesome ~/.config/; } || { echo "${red}couldnt copy directory${reset}";}
 }
 
-# install a bunch of crap, only if ubuntu
-if [ $DISTRO != 'Ubuntu' ]; then echo "${red}! NOT UBUNTU : couldnt do shit${reset}";
-else 
-	# add ppa for the latest version of awesomewm
-	sudo add-apt-repository  ppa:klaus-vormweg/awesome -y;
-	sudo apt update && sudo apt install awesome -y;
+# function to get node and npm
+function getNodeNPM {
 
-	# install basic programs and such
-	sudo apt-get install curl vim build-essential htop git libssl-dev && sudo apt-get update;
-	
 	# install nodejs & npm
 	{ curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash;
 	  sudo apt-get install nodejs; 
@@ -43,6 +36,10 @@ else
 	{ sudo ln -s /usr/bin/nodejs /usr/bin/node && 
 	  echo "${green}added symlink${green}"; } || 
 	{ echo "didn't need symlink"; };
+}
+
+# function to get sublime
+function getSublime {
 
 	# install sublime text 3
 	{ sudo add-apt-repository ppa:webupd8team/sublime-text-3 &&
@@ -50,6 +47,10 @@ else
 	  sudo apt-get install sublime-text-installer &&
 	  echo "${green}Installed Sublime 3${reset}"; } ||
 	{ echo "${red}Ran into issue installing Sublime${reset}"; }
+}
+
+# function to get google chrome stable
+function getChromeStable {
 
 	# install google chrome stable
 	{ wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -;
@@ -57,7 +58,21 @@ else
 	  sudo apt-get update && sudo apt-get install google-chrome-stable;
 	  echo "${green}Installed Google Chrome stable${reset}"; } ||
 	{ echo "${red}Ran into issue installing Google Chrome stable${reset}"; }
+}
 
-	#copy the awesome folder from here into ~/.config/awesome
+# install a bunch of crap, only if ubuntu
+if [ $DISTRO != 'Ubuntu' ]; then echo "${red}! NOT UBUNTU : couldnt do shit${reset}";
+else 
+	# add ppa for the latest version of awesomewm
+	sudo add-apt-repository  ppa:klaus-vormweg/awesome -y;
+	sudo apt update && sudo apt install awesome -y;
+
+	# install basic programs and such
+	sudo apt-get install curl vim build-essential htop git libssl-dev && sudo apt-get update;
+	
+	# get and set various things...
+	getNodeNPM;
+	getSublime;
+	getChromeStable
 	copyAwesomeConfig
 fi
